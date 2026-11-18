@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños, Mamá</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Editorial Serif & Clean Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f6f3eb;
+            color: #2c332b;
+        }
+        .font-editorial {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        /* Estilo Glassmorphism Botánico Refinado */
+        .botanical-card {
+            background: rgba(252, 250, 245, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(180, 155, 115, 0.35);
+            box-shadow: 0 20px 50px rgba(44, 51, 43, 0.12);
+        }
+        .botanical-pill {
+            background: rgba(252, 250, 245, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(163, 148, 122, 0.3);
+            box-shadow: 0 6px 24px rgba(44, 51, 43, 0.06);
+        }
+        @keyframes softBreath {
+            0%, 100% { transform: translateY(0px); opacity: 0.92; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+        .animate-breath {
+            animation: softBreath 4.5s ease-in-out infinite;
+        }
+        /* Scrollbar sutil para la carta en pantallas pequeñas */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(163, 148, 122, 0.4);
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="w-full h-screen relative overflow-hidden flex flex-col justify-between">
+
+    <!-- Lienzo Botánico: Pradera Silvestre y Mariposas -->
+    <canvas id="botanicalCanvas"></canvas>
+
+    <!-- Cabecera Minimalista -->
+    <header class="relative z-10 w-full p-4 sm:p-6 md:px-10 flex justify-between items-center pointer-events-none">
+        <div class="pointer-events-auto flex items-center gap-3.5 botanical-pill px-4 py-2.5 rounded-full">
+            <div class="w-9 h-9 rounded-full bg-[#3f4f3e] flex items-center justify-center text-[#f4ebd9] shadow-sm">
+                <i data-lucide="feather" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <h1 id="headerTitle" class="font-editorial text-lg sm:text-xl font-semibold text-[#232b22] tracking-wide leading-none">
+                    Feliz Cumpleaños, Mamá
+                </h1>
+                <p id="headerSubtitle" class="text-[11px] text-[#5e685c] font-normal tracking-wider uppercase mt-1">
+                    Un jardín para celebrar tu vida
+                </p>
+            </div>
+        </div>
+
+        <!-- Controles Superiores -->
+        <div class="pointer-events-auto flex items-center gap-2.5">
+            <button id="musicBtn" class="flex items-center gap-2 px-4 py-2.5 rounded-full botanical-pill hover:bg-white/95 text-[#2c332b] font-medium transition-all text-xs tracking-wide active:scale-95">
+                <i data-lucide="volume-x" id="musicIcon" class="w-4 h-4 text-[#8c6d3f]"></i>
+                <span id="musicText" class="hidden sm:inline">Música</span>
+            </button>
+            <button id="openCardBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#354434] hover:bg-[#283527] text-[#faf7f0] font-medium shadow-md shadow-[#2c332b]/15 transition-all text-xs tracking-wide active:scale-95">
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-[#dfc498]"></i>
+                <span>Leer Carta</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Guía Sutil Superior -->
+    <div id="guidePill" class="relative z-10 self-center pointer-events-none mt-1 px-5 py-2 rounded-full botanical-pill text-center text-xs text-[#4a5448] tracking-wide animate-breath transition-opacity duration-700">
+        <span class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#b88c46]"></span>
+            Toca la <strong class="font-semibold text-[#8c6222]">mariposa dorada</strong> del centro o cualquier mariposa volando
+        </span>
+    </div>
+
+    <!-- Pie de Página Editorial -->
+    <footer class="relative z-10 w-full p-4 sm:p-6 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-3 pointer-events-none">
+        <div class="pointer-events-auto botanical-pill px-5 py-3 rounded-2xl max-w-xl flex items-center gap-3.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-[#a87e38] shrink-0"></i>
+            <p id="footerQuote" class="font-editorial text-base sm:text-lg text-[#2c332b] italic leading-snug transition-opacity duration-300">
+                "Gracias por ser siempre mi pilar, mi refugio y mi mejor ejemplo."
+            </p>
+        </div>
+
+        <button id="randomButterflyBtn" class="pointer-events-auto px-4 py-2.5 rounded-full botanical-pill hover:bg-white/95 text-[#2c332b] font-medium text-xs tracking-wide flex items-center gap-2 transition-all active:scale-95">
+            <i data-lucide="wind" class="w-3.5 h-3.5 text-[#8c6d3f]"></i>
+            <span>Otro mensaje</span>
+        </button>
+    </footer>
+
+    <!-- MODAL 1: Carta Principal de Cumpleaños -->
+    <div id="birthdayCardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1e241d]/45 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="birthdayCardBox" class="botanical-card w-full max-w-lg rounded-3xl p-7 sm:p-10 relative text-center transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            
+            <button class="closeModalBtn absolute top-5 right-5 text-[#5e685c] hover:text-[#232b22] p-2 rounded-full hover:bg-[#e8e2d5]/60 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full border border-[#c9a972]/60 bg-[#f7f2e7] flex items-center justify-center text-[#9c7232]">
+                <i data-lucide="flower" class="w-6 h-6"></i>
+            </div>
+
+            <p class="text-[11px] uppercase tracking-[0.2em] text-[#8c6d3f] font-medium">
+                En tu día especial
+            </p>
+
+            <h2 id="cardTitle" class="font-editorial text-3xl sm:text-4xl font-semibold text-[#232b22] mt-1.5 mb-5">
+                Feliz Cumpleaños, Mamá
+            </h2>
+
+            <div class="w-16 h-[1px] bg-[#c9a972]/60 mx-auto mb-6"></div>
+
+            <div class="text-left space-y-4 text-sm sm:text-[15px] text-[#363f35] leading-relaxed font-normal">
+                <p id="cardParagraph1"></p>
+                <p id="cardParagraph2"></p>
+                <p id="cardParagraph3" class="font-editorial text-lg sm:text-xl italic text-[#232b22] pt-1"></p>
+            </div>
+
+            <div class="flex items-end justify-between border-t border-[#d8cfc0] pt-5 mt-7">
+                <span class="text-xs text-[#697367] tracking-wide">Con todo mi cariño,</span>
+                <span id="cardSignature" class="font-editorial text-2xl italic font-semibold text-[#232b22]">Tu hijo</span>
+            </div>
+
+            <button class="closeModalBtn mt-7 w-full py-3 rounded-xl bg-[#354434] hover:bg-[#283527] text-[#faf7f0] font-medium text-xs uppercase tracking-widest transition shadow-sm">
+                Volver al jardín
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Dedicatoria de Mariposa -->
+    <div id="butterflyQuoteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1e241d]/35 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="butterflyQuoteBox" class="botanical-card w-full max-w-md rounded-3xl p-7 relative text-center transform scale-95 transition-transform duration-300">
+            <button class="closeModalBtn absolute top-4 right-4 text-[#5e685c] hover:text-[#232b22] p-1.5 rounded-full hover:bg-[#e8e2d5]/60">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f3ece0] border border-[#d6c5a9] text-[10px] uppercase tracking-[0.18em] text-[#826334] font-medium mb-4">
+                <span id="butterflySpeciesLabel">Mariposa del Jardín</span>
+            </div>
+
+            <p id="butterflyQuoteText" class="font-editorial text-2xl sm:text-[26px] text-[#232b22] italic leading-relaxed my-3 px-2">
+                "Te quiero mucho, mami."
+            </p>
+
+            <div class="w-10 h-[1px] bg-[#c9a972]/60 mx-auto my-5"></div>
+
+            <button class="closeModalBtn px-7 py-2.5 rounded-full bg-[#354434] hover:bg-[#283527] text-[#faf7f0] font-medium text-xs tracking-wider transition">
+                Continuar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // ✏️ PERSONALIZACIÓN DEL REGALO (EDITA ESTOS TEXTOS A TU GUSTO)
+        // =========================================================================
+        const CONFIG_REGALO = {
+            nombreMama: "Mamá", // Ej: "Mamá", "Mami", o su nombre
+            titulo: "Feliz Cumpleaños, Mamá",
+            firma: "Tu hijo fav", // Ej: "Matías", "Tu hijo que te quiere mucho"
+            
+            // Carta principal al tocar la Mariposa Dorada del centro
+            cartaPrincipal: [
+                "Quise prepararte este pequeño jardín lleno de flores y mariposas porque sé lo mucho que te gustan, y porque de alguna manera representan la calma (no mucha), la alegría y el amorsh que siempre entregas a quienes te rodeamos.",
+                "Gracias por tu paciencia infinita, por tus consejos en el momento justo, aunque un poco fríos; y por ser siempre mi pilar y mi hogar. Todo lo bueno que soy lleva tu huella y tu ejemplo.",
+                "Que este nuevo año de vida te regale tanta salud, paz y felicidad como la que tú nos das cada día. Te quiero mucho,mami. Al infinito y más allá."
+            ],
+
+            // Frases que aparecen al tocar cada mariposa (en español chileno cálido y natural)
+            frasesMariposas: [
+                "Gracias por ser siempre mi pilar, mi hogar y mi mejor ejemplo.",
+                "Tu cariño y tu fortaleza iluminan cada día de nuestra familia.",
+                "No hay abrazo que dé tanta paz como el tuyo. ¡Feliz cumpleaños, mamiii!",
+                "Gracias por estar siempre ahí, escuchando y apoyandonos.",
+                "Admiro tu forma de ver la vida y la fortaleza que has tenido cada día desde que era una cagaita.",
+                "Que la vida te devuelva multiplicado todo lo que nos has entregado siempre.",
+                "Tenerte como mamá es el regalo más grande que me ha dado la vida.",
+                "Hoy celebramos tu día y todo lo maravilloso que significas para nosotros."
+            ]
+        };
+        // =========================================================================
+
+        // Cargar textos personalizados en la interfaz
+        document.getElementById('headerTitle').innerText = CONFIG_REGALO.titulo;
+        document.getElementById('cardTitle').innerText = CONFIG_REGALO.titulo;
+        document.getElementById('cardParagraph1').innerText = CONFIG_REGALO.cartaPrincipal[0];
+        document.getElementById('cardParagraph2').innerText = CONFIG_REGALO.cartaPrincipal[1];
+        document.getElementById('cardParagraph3').innerText = CONFIG_REGALO.cartaPrincipal[2];
+        document.getElementById('cardSignature').innerText = CONFIG_REGALO.firma;
+        document.getElementById('footerQuote').innerText = `"${CONFIG_REGALO.frasesMariposas[0]}"`;
+
+        lucide.createIcons();
+
+        // =========================================================================
+        // 🎼 MÚSICA AMBIENTAL SUAVE (PIANO / ARPA ACÚSTICA CON WEB AUDIO API)
+        // =========================================================================
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicInterval = null;
+
+        // Progresión armónica serena en Re Mayor / Si Menor (estilo piano neoclásico suave)
+        const progressions = [
+            [293.66, 369.99, 440.00, 554.37], // Dmaj7
+            [246.94, 293.66, 369.99, 440.00], // Bm7
+            [196.00, 246.94, 293.66, 369.99], // Gmaj7
+            [220.00, 277.18, 329.63, 440.00]  // A6
+        ];
+        let chordIndex = 0;
+        let stepIndex = 0;
+
+        function playGentleNote() {
+            if (!isMusicPlaying || !audioCtx) return;
+
+            const chord = progressions[chordIndex];
+            const freq = chord[stepIndex % chord.length];
+            stepIndex++;
+            if (stepIndex % 8 === 0) {
+                chordIndex = (chordIndex + 1) % progressions.length;
+            }
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const subOsc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            subOsc.type = 'triangle';
+            subOsc.frequency.setValueAtTime(freq * 2, now);
+
+            const subGain = audioCtx.createGain();
+            subGain.gain.setValueAtTime(0.008, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.038, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.4);
+
+            osc.connect(gain);
+            subOsc.connect(subGain);
+            subGain.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            subOsc.start(now);
+            osc.stop(now + 3.5);
+            subOsc.stop(now + 3.5);
+        }
+
+        function toggleMusic() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isMusicPlaying = !isMusicPlaying;
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+
+            if (isMusicPlaying) {
+                icon.setAttribute('data-lucide', 'volume-2');
+                text.innerText = "Sonando";
+                playGentleNote();
+                musicInterval = setInterval(playGentleNote, 680);
+            } else {
+                icon.setAttribute('data-lucide', 'volume-x');
+                text.innerText = "Música";
+                clearInterval(musicInterval);
+            }
+            lucide.createIcons();
+        }
+
+        document.getElementById('musicBtn').addEventListener('click', toggleMusic);
+
+        // =========================================================================
+        // 🌿 MOTOR BOTÁNICO: PRADERA EN ACUARELA Y MARIPOSAS REALISTAS
+        // =========================================================================
+        const canvas = document.getElementById('botanicalCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let botanicalStems = [];
+        let butterflies = [];
+        let queenButterfly = null;
+        let ambientMotes = [];
+        let shimmerParticles = [];
+        let breezeTime = 0;
+
+        // Especies de mariposas con paletas naturales y refinadas
+        const butterflySpecies = [
+            {
+                species: 'Mariposa Monarca',
+                primary: '#c86428',
+                secondary: '#e39649',
+                vein: '#2b1d14',
+                accent: '#f7efe2'
+            },
+            {
+                species: 'Mariposa Morfo Azul',
+                primary: '#3b6e8c',
+                secondary: '#76a5bf',
+                vein: '#1c2e3b',
+                accent: '#e6f0f5'
+            },
+            {
+                species: 'Macaón Silvestre',
+                primary: '#d4b459',
+                secondary: '#ede0a6',
+                vein: '#332c1d',
+                accent: '#597380'
+            },
+            {
+                species: 'Aurora del Prado',
+                primary: '#c97b84',
+                secondary: '#e6b3b8',
+                vein: '#3b2326',
+                accent: '#faf2f3'
+            },
+            {
+                species: 'Licénida Lavanda',
+                primary: '#7c749c',
+                secondary: '#b2abc9',
+                vein: '#292636',
+                accent: '#f2f0f7'
+            }
+        ];
+
+        // Tallos Botánicos (Lavandas, Cosmos Blancos, Rosas Silvestres, Eucalipto)
+        class BotanicalStem {
+            constructor(x, layer) {
+                this.x = x;
+                this.layer = layer; // 0: fondo difuso, 1: plano medio, 2: primer plano
+                this.height = (layer === 0 ? 110 : layer === 1 ? 145 : 95) + Math.random() * 85;
+                this.phase = Math.random() * Math.PI * 2;
+                this.swayAmount = (layer === 0 ? 10 : layer === 1 ? 16 : 22) + Math.random() * 6;
+                const types = ['lavender', 'cosmos', 'wildrose', 'eucalyptus', 'grass'];
+                this.type = types[Math.floor(Math.random() * types.length)];
+                this.stemColor = layer === 0
+                    ? 'rgba(116, 135, 108, 0.45)'
+                    : layer === 1
+                        ? 'rgba(84, 107, 78, 0.78)'
+                        : 'rgba(63, 84, 58, 0.9)';
+            }
+
+            draw(time) {
+                const sway = Math.sin(time + this.phase) * this.swayAmount;
+                const baseY = height;
+                const tipX = this.x + sway;
+                const tipY = baseY - this.height;
+                const ctrlX = this.x + sway * 0.35;
+                const ctrlY = baseY - this.height * 0.55;
+
+                ctx.save();
+                ctx.strokeStyle = this.stemColor;
+                ctx.lineWidth = this.layer === 0 ? 1.2 : 1.7;
+                ctx.lineCap = 'round';
+
+                // Tallo orgánico curvo
+                ctx.beginPath();
+                ctx.moveTo(this.x, baseY);
+                ctx.quadraticCurveTo(ctrlX, ctrlY, tipX, tipY);
+                ctx.stroke();
+
+                // Hojas delicadas en el tallo
+                if (this.type !== 'grass') {
+                    this.drawLeaves(ctrlX, ctrlY, sway * 0.015);
+                }
+
+                // Floración según especie botánica
+                if (this.type === 'lavender') {
+                    this.drawLavender(tipX, tipY, sway * 0.018);
+                } else if (this.type === 'cosmos') {
+                    this.drawCosmos(tipX, tipY, sway * 0.02);
+                } else if (this.type === 'wildrose') {
+                    this.drawWildRose(tipX, tipY, sway * 0.02);
+                } else if (this.type === 'eucalyptus') {
+                    this.drawEucalyptus(tipX, tipY, sway * 0.015);
+                }
+
+                ctx.restore();
+            }
+
+            drawLeaves(x, y, angle) {
+                ctx.fillStyle = this.stemColor;
+                [-1, 1].forEach(dir => {
+                    ctx.save();
+                    ctx.translate(x, y + dir * 10);
+                    ctx.rotate(angle + dir * 0.65);
+                    ctx.beginPath();
+                    ctx.ellipse(dir * 9, 0, 10, 3.2, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+
+            drawLavender(x, y, angle) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                const alpha = this.layer === 0 ? 0.5 : 0.88;
+                for (let i = 0; i < 6; i++) {
+                    const offsetY = i * 6.5;
+                    const size = 3.8 - i * 0.3;
+                    ctx.fillStyle = i % 2 === 0
+                        ? `rgba(134, 117, 168, ${alpha})`
+                        : `rgba(158, 142, 189, ${alpha})`;
+                    ctx.beginPath();
+                    ctx.ellipse(-2.5, offsetY, size, size * 0.7, -0.3, 0, Math.PI * 2);
+                    ctx.ellipse(2.5, offsetY + 2, size, size * 0.7, 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            drawCosmos(x, y, angle) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                const alpha = this.layer === 0 ? 0.55 : 0.92;
+                const petals = 8;
+                ctx.fillStyle = `rgba(252, 250, 245, ${alpha})`;
+                ctx.strokeStyle = `rgba(195, 185, 168, ${alpha * 0.6})`;
+                ctx.lineWidth = 0.6;
+
+                for (let i = 0; i < petals; i++) {
+                    ctx.save();
+                    ctx.rotate((i * Math.PI * 2) / petals);
+                    ctx.beginPath();
+                    ctx.ellipse(0, -10, 3.6, 8.5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // Centro ocre dorado
+                ctx.fillStyle = `rgba(204, 155, 68, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(0, 0, 3.8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            drawWildRose(x, y, angle) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                const alpha = this.layer === 0 ? 0.5 : 0.88;
+                const petals = 5;
+                ctx.fillStyle = `rgba(219, 154, 162, ${alpha})`;
+                for (let i = 0; i < petals; i++) {
+                    ctx.save();
+                    ctx.rotate((i * Math.PI * 2) / petals);
+                    ctx.beginPath();
+                    ctx.arc(0, -7, 6.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+                ctx.fillStyle = `rgba(227, 187, 102, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            drawEucalyptus(x, y, angle) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                const alpha = this.layer === 0 ? 0.45 : 0.82;
+                ctx.fillStyle = `rgba(116, 145, 128, ${alpha})`;
+                for (let i = 0; i < 5; i++) {
+                    const py = i * 9;
+                    const r = 5.5 - i * 0.4;
+                    ctx.beginPath();
+                    ctx.arc(-5, py, r, 0, Math.PI * 2);
+                    ctx.arc(5, py + 4, r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Clase Mariposa Botánica Detallada
+        class Butterfly {
+            constructor(isGoldenQueen = false) {
+                this.isGoldenQueen = isGoldenQueen;
+                this.size = isGoldenQueen ? 30 : (15 + Math.random() * 6);
+                this.x = isGoldenQueen ? width / 2 : (Math.random() * (width - 100) + 50);
+                this.y = isGoldenQueen ? height * 0.42 : (Math.random() * (height * 0.62) + 85);
+                this.vx = (Math.random() - 0.5) * 1.3;
+                this.vy = (Math.random() - 0.5) * 0.9;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = isGoldenQueen ? 0.11 : (0.14 + Math.random() * 0.07);
+                this.time = Math.random() * 100;
+
+                if (isGoldenQueen) {
+                    this.info = {
+                        species: 'Mariposa Dorada',
+                        primary: '#cfa04c',
+                        secondary: '#f0d79e',
+                        vein: '#473314',
+                        accent: '#fffdf7'
+                    };
+                } else {
+                    this.info = butterflySpecies[Math.floor(Math.random() * butterflySpecies.length)];
+                }
+
+                this.quote = CONFIG_REGALO.frasesMariposas[Math.floor(Math.random() * CONFIG_REGALO.frasesMariposas.length)];
+            }
+
+            update() {
+                this.wingPhase += this.wingSpeed;
+                this.time++;
+
+                if (this.isGoldenQueen) {
+                    const cx = width / 2;
+                    const cy = height * 0.42;
+                    this.x = cx + Math.sin(this.time * 0.014) * Math.min(70, width * 0.14);
+                    this.y = cy + Math.cos(this.time * 0.02) * 22;
+                } else {
+                    if (this.time % 110 === 0) {
+                        this.vx += (Math.random() - 0.5) * 1.1;
+                        this.vy += (Math.random() - 0.5) * 0.8;
+                        const speed = Math.hypot(this.vx, this.vy);
+                        if (speed > 1.75) {
+                            this.vx = (this.vx / speed) * 1.75;
+                            this.vy = (this.vy / speed) * 1.75;
+                        }
+                    }
+
+                    const lift = Math.sin(this.wingPhase) * 0.28;
+                    this.x += this.vx;
+                    this.y += this.vy - lift;
+
+                    const margin = 50;
+                    const bottomBound = height - 135;
+                    if (this.x < margin) { this.x = margin; this.vx = Math.abs(this.vx); }
+                    if (this.x > width - margin) { this.x = width - margin; this.vx = -Math.abs(this.vx); }
+                    if (this.y < 85) { this.y = 85; this.vy = Math.abs(this.vy); }
+                    if (this.y > bottomBound) { this.y = bottomBound; this.vy = -Math.abs(this.vy); }
+                }
+
+                // Estela dorada sutil
+                if (Math.random() < (this.isGoldenQueen ? 0.35 : 0.08)) {
+                    shimmerParticles.push(new ShimmerMote(
+                        this.x + (Math.random() - 0.5) * this.size,
+                        this.y + (Math.random() - 0.5) * this.size,
+                        true
+                    ));
+                }
+            }
+
+            draw() {
+                const flap = 0.22 + Math.abs(Math.cos(this.wingPhase)) * 0.78;
+                const tilt = this.isGoldenQueen
+                    ? Math.sin(this.time * 0.016) * 0.14
+                    : Math.atan2(this.vy, this.vx) * 0.22;
+
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(tilt);
+
+                // Halo cálido discreto para la mariposa principal
+                if (this.isGoldenQueen) {
+                    const halo = ctx.createRadialGradient(0, 0, 4, 0, 0, this.size * 2.4);
+                    halo.addColorStop(0, 'rgba(235, 203, 138, 0.55)');
+                    halo.addColorStop(0.6, 'rgba(219, 180, 108, 0.15)');
+                    halo.addColorStop(1, 'rgba(219, 180, 108, 0)');
+                    ctx.fillStyle = halo;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 2.4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Sombra suave proyectada
+                ctx.save();
+                ctx.translate(4, 8);
+                ctx.scale(flap, 1);
+                ctx.fillStyle = 'rgba(44, 51, 43, 0.06)';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size * 1.1, this.size * 0.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Alas izquierda y derecha con nervaduras estilo ilustración botánica
+                [-1, 1].forEach(side => {
+                    ctx.save();
+                    ctx.scale(side * flap, 1);
+
+                    // Ala anterior (superior)
+                    const wingGrad = ctx.createLinearGradient(0, -this.size, this.size * 1.4, this.size * 0.4);
+                    wingGrad.addColorStop(0, this.info.primary);
+                    wingGrad.addColorStop(1, this.info.secondary);
+
+                    ctx.fillStyle = wingGrad;
+                    ctx.strokeStyle = this.info.vein;
+                    ctx.lineWidth = this.isGoldenQueen ? 1.5 : 1.0;
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size * 0.08);
+                    ctx.bezierCurveTo(
+                        this.size * 0.75, -this.size * 1.15,
+                        this.size * 1.55, -this.size * 0.55,
+                        this.size * 1.15, this.size * 0.12
+                    );
+                    ctx.quadraticCurveTo(this.size * 0.5, this.size * 0.18, 0, this.size * 0.05);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Nervaduras delicadas en el ala superior
+                    ctx.strokeStyle = this.info.vein;
+                    ctx.globalAlpha = 0.35;
+                    ctx.lineWidth = 0.7;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.quadraticCurveTo(this.size * 0.6, -this.size * 0.45, this.size * 1.15, -this.size * 0.42);
+                    ctx.moveTo(0, 0);
+                    ctx.quadraticCurveTo(this.size * 0.55, -this.size * 0.15, this.size * 1.05, -this.size * 0.05);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+
+                    // Ala posterior (inferior)
+                    ctx.fillStyle = this.info.primary;
+                    ctx.strokeStyle = this.info.vein;
+                    ctx.lineWidth = this.isGoldenQueen ? 1.4 : 0.95;
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, this.size * 0.04);
+                    ctx.bezierCurveTo(
+                        this.size * 0.95, this.size * 0.08,
+                        this.size * 0.85, this.size * 0.95,
+                        this.size * 0.18, this.size * 0.75
+                    );
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Detalles ornamentales en el borde
+                    ctx.fillStyle = this.info.accent;
+                    ctx.beginPath();
+                    ctx.arc(this.size * 1.02, -this.size * 0.34, this.size * 0.06, 0, Math.PI * 2);
+                    ctx.arc(this.size * 0.68, this.size * 0.52, this.size * 0.05, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.restore();
+                });
+
+                // Cuerpo y antenas finas
+                ctx.fillStyle = this.info.vein;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size * 0.075, this.size * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = this.info.vein;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(-1, -this.size * 0.35);
+                ctx.quadraticCurveTo(-this.size * 0.18, -this.size * 0.65, -this.size * 0.26, -this.size * 0.58);
+                ctx.moveTo(1, -this.size * 0.35);
+                ctx.quadraticCurveTo(this.size * 0.18, -this.size * 0.65, this.size * 0.26, -this.size * 0.58);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        // Destellos dorados sutiles
+        class ShimmerMote {
+            constructor(x, y, isTrail = false) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = isTrail ? (Math.random() * 0.45) : (Math.random() * 3.2 + 1.0);
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed - (isTrail ? 0.25 : 0.6);
+                this.life = 1;
+                this.decay = isTrail ? 0.022 : (0.014 + Math.random() * 0.012);
+                this.size = isTrail ? (Math.random() * 1.8 + 0.8) : (Math.random() * 3 + 1.5);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.life * 0.85;
+                ctx.fillStyle = '#d4a348';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Motas flotantes en la luz de la tarde
+        class AmbientMote {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.8;
+                this.vx = 0.15 + Math.random() * 0.25;
+                this.vy = -0.1 - Math.random() * 0.2;
+                this.alpha = 0.18 + Math.random() * 0.35;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = '#c9a050';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initBotanicalGarden() {
+            botanicalStems = [];
+            butterflies = [];
+            ambientMotes = [];
+
+            // Tallos silvestres distribuidos en 3 planos de profundidad
+            const density = Math.floor(width / 7);
+            for (let i = 0; i < density; i++) {
+                const layer = i % 3;
+                botanicalStems.push(new BotanicalStem(Math.random() * width, layer));
+            }
+
+            // Mariposa Dorada Principal
+            queenButterfly = new Butterfly(true);
+
+            // Mariposas silvestres
+            const count = width < 640 ? 8 : 13;
+            for (let i = 0; i < count; i++) {
+                butterflies.push(new Butterfly(false));
+            }
+
+            for (let i = 0; i < 30; i++) {
+                ambientMotes.push(new AmbientMote());
+            }
+        }
+
+        function drawWatercolorBackdrop() {
+            // Fondo papel pergamino cálido con transición hacia verde salvia suave
+            const bg = ctx.createLinearGradient(0, 0, 0, height);
+            bg.addColorStop(0, '#f7f3e8');    // Crema pergamino
+            bg.addColorStop(0.55, '#f2ede0'); // Marfil cálido
+            bg.addColorStop(0.85, '#e5eadc'); // Niebla salvia tenue
+            bg.addColorStop(1, '#d3dec7');    // Verde botánico suave en la base
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            // Luz dorada difusa tipo hora mágica en esquina superior derecha
+            const lightX = width * 0.85;
+            const lightY = height * 0.15;
+            const sunWash = ctx.createRadialGradient(lightX, lightY, 15, lightX, lightY, Math.max(width, height) * 0.65);
+            sunWash.addColorStop(0, 'rgba(247, 228, 186, 0.65)');
+            sunWash.addColorStop(0.45, 'rgba(242, 223, 182, 0.22)');
+            sunWash.addColorStop(1, 'rgba(242, 223, 182, 0)');
+            ctx.fillStyle = sunWash;
+            ctx.fillRect(0, 0, width, height);
+
+            // Colina de acuarela al fondo de la pradera
+            ctx.fillStyle = 'rgba(173, 189, 162, 0.25)';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, height - 110);
+            ctx.quadraticCurveTo(width * 0.35, height - 165, width * 0.7, height - 105);
+            ctx.quadraticCurveTo(width * 0.88, height - 80, width, height - 125);
+            ctx.lineTo(width, height);
+            ctx.fill();
+        }
+
+        function triggerShimmer(x, y, count = 28) {
+            for (let i = 0; i < count; i++) {
+                shimmerParticles.push(new ShimmerMote(x, y, false));
+            }
+        }
+
+        function animate() {
+            breezeTime += 0.018;
+            ctx.clearRect(0, 0, width, height);
+
+            drawWatercolorBackdrop();
+
+            ambientMotes.forEach(m => { m.update(); m.draw(); });
+
+            // Capa 0 de flora (fondo)
+            botanicalStems.filter(s => s.layer === 0).forEach(s => s.draw(breezeTime));
+
+            // Capa 1 de flora (medio)
+            botanicalStems.filter(s => s.layer === 1).forEach(s => s.draw(breezeTime));
+
+            // Mariposas en vuelo
+            butterflies.forEach(b => { b.update(); b.draw(); });
+
+            // Mariposa Dorada Principal
+            if (queenButterfly) {
+                queenButterfly.update();
+                queenButterfly.draw();
+            }
+
+            // Capa 2 de flora (primer plano)
+            botanicalStems.filter(s => s.layer === 2).forEach(s => s.draw(breezeTime));
+
+            // Destellos
+            for (let i = shimmerParticles.length - 1; i >= 0; i--) {
+                shimmerParticles[i].update();
+                shimmerParticles[i].draw();
+                if (shimmerParticles[i].life <= 0) {
+                    shimmerParticles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // =========================================================================
+        // 🖱️ INTERACCIÓN CON MARIPOSAS
+        // =========================================================================
+        function handleCanvasInteraction(clientX, clientY) {
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            // 1. Mariposa Dorada Central -> Abre Carta Principal
+            if (queenButterfly && Math.hypot(x - queenButterfly.x, y - queenButterfly.y) < 55) {
+                triggerShimmer(queenButterfly.x, queenButterfly.y, 35);
+                document.getElementById('guidePill').classList.add('opacity-0');
+                openModal('birthdayCardModal', 'birthdayCardBox');
+                return;
+            }
+
+            // 2. Mariposas Silvestres -> Muestra dedicatoria
+            for (let b of butterflies) {
+                if (Math.hypot(x - b.x, y - b.y) < 42) {
+                    triggerShimmer(b.x, b.y, 24);
+                    b.vy = -1.8;
+                    b.vx = (Math.random() > 0.5 ? 1 : -1) * 1.8;
+                    openButterflyMessage(b);
+                    return;
+                }
+            }
+
+            triggerShimmer(x, y, 12);
+        }
+
+        canvas.addEventListener('click', (e) => handleCanvasInteraction(e.clientX, e.clientY));
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+
+            let hovering = false;
+            if (queenButterfly && Math.hypot(mx - queenButterfly.x, my - queenButterfly.y) < 55) {
+                hovering = true;
+            } else {
+                for (let b of butterflies) {
+                    if (Math.hypot(mx - b.x, my - b.y) < 42) {
+                        hovering = true;
+                        break;
+                    }
+                }
+            }
+            canvas.style.cursor = hovering ? 'pointer' : 'default';
+        });
+
+        // =========================================================================
+        // 🪟 CONTROL DE MODALES
+        // =========================================================================
+        function openModal(modalId, boxId) {
+            const modal = document.getElementById(modalId);
+            const box = document.getElementById(boxId);
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            box.classList.remove('scale-95');
+            box.classList.add('scale-100');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.fixed').forEach(modal => {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                const box = modal.firstElementChild;
+                if (box) {
+                    box.classList.remove('scale-100');
+                    box.classList.add('scale-95');
+                }
+            });
+        }
+
+        document.querySelectorAll('.closeModalBtn').forEach(btn => {
+            btn.addEventListener('click', closeAllModals);
+        });
+
+        document.getElementById('openCardBtn').addEventListener('click', () => {
+            openModal('birthdayCardModal', 'birthdayCardBox');
+        });
+
+        function openButterflyMessage(butterfly) {
+            document.getElementById('butterflySpeciesLabel').innerText = butterfly.info.species;
+            document.getElementById('butterflyQuoteText').innerText = `"${butterfly.quote}"`;
+            openModal('butterflyQuoteModal', 'butterflyQuoteBox');
+        }
+
+        document.getElementById('randomButterflyBtn').addEventListener('click', () => {
+            const b = butterflies[Math.floor(Math.random() * butterflies.length)];
+            if (b) {
+                triggerShimmer(b.x, b.y, 24);
+                openButterflyMessage(b);
+            }
+        });
+
+        // Rotación suave de frases en el pie de página
+        let currentQuoteIdx = 0;
+        setInterval(() => {
+            currentQuoteIdx = (currentQuoteIdx + 1) % CONFIG_REGALO.frasesMariposas.length;
+            const footerEl = document.getElementById('footerQuote');
+            footerEl.style.opacity = 0;
+            setTimeout(() => {
+                footerEl.innerText = `"${CONFIG_REGALO.frasesMariposas[currentQuoteIdx]}"`;
+                footerEl.style.opacity = 1;
+            }, 300);
+        }, 7500);
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initBotanicalGarden();
+        });
+
+        window.onload = () => {
+            initBotanicalGarden();
+            animate();
+        };
+    </script>
+</body>
+</html>
+
+
